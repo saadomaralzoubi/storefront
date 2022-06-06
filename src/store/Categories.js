@@ -5,21 +5,23 @@ const intialState = {
       id: 1,
       description: "best cars",
     },
+   
     {
-      name: "food",
+      name: "Food",
       id: 2,
-      description: "best food",
+      description: "best Food ",
     },
     {
       name: "phones",
       id: 3,
       description: "best phones",
     },
+   
   ],
   selectedCategory: {},
 };
 
-export default function reducer(state = intialState, action) {
+export default function state(state = intialState, action) {
   switch (action.type) {
     case "CATEGORY_SELECTED":
       let selectedCategory = state.categories.find(
@@ -33,7 +35,7 @@ export default function reducer(state = intialState, action) {
       return state;
   }
 }
-export const SelectedCategory = (value) => {
+export const getSelectedCategory = (value) => {
   return {
     type: "CATEGORY_SELECTED",
     payload: value,

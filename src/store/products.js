@@ -42,13 +42,35 @@ export default function state(state = intialState, action) {
         ...state,
         selectedProduct: selectedProduct,
       };
+    case "Decrement_Product_Quantity":
+      let products = state.products;
+
+      let newproducts = products.map((product) => {
+        console.log(product.items);
+        if (product.id === action.payload && product.items > 0) {
+          return { ...product, items: product.items - 1 };
+        } else {
+          return product;
+        }
+      });
+      return {
+        ...state,
+        products: newproducts,
+      };
+
     default:
       return state;
   }
 }
-export const SelectedProduct = (value) => {
+export const getSelectedProduct = (value) => {
   return {
     type: "PRODUCT_SELECTED",
+    payload: value,
+  };
+};
+export const decrementProductQuantity = (value) => {
+  return {
+    type: "Decrement_Product_Quantity",
     payload: value,
   };
 };

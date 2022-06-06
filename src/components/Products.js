@@ -1,4 +1,9 @@
 import { connect } from "react-redux";
+import { addToCart } from "../store/Cart";
+import { decrementProductQuantity } from "../store/products";
+import Button from "@mui/material/Button";
+let sum=0
+
 function Products(props) {
   const products = props.reducers.products;
 
@@ -12,9 +17,20 @@ function Products(props) {
               <p>{product.description}</p>
               <p>{product.price}</p>
               <img src={product.image} alt="product" />
+              <Button
+                onClick={() => {
+                  sum=sum+1
+                  props.addToCart(product);
+                  props.decrementProductQuantity(product.id);
+                }}
+              >
+                Add to Cart
+              </Button>
+              <p>cart : {sum}</p>
             </div>
           );
         } else {
+          
           return null;
         }
       })}
@@ -27,4 +43,8 @@ const mapStateToProps = (state) => {
     catagory: state.creducers,
   };
 };
-export default connect(mapStateToProps)(Products);
+const mapDispatchToProps = {
+  addToCart,
+  decrementProductQuantity,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Products);
