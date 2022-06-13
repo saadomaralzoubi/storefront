@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 
 
-//=====================================================
+
 import { connect, useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -48,7 +48,6 @@ function Categories(props) {
   );
 }
 
-//enter the state that we take from store to add it to cheldrin
 const mapStateToPrps = (state) => ({ category: state.catigory });
-const mapDispatchToProps = { getSelectedCategory }; //take the action
+const mapDispatchToProps = { getSelectedCategory }; 
 export default connect(mapStateToPrps, mapDispatchToProps)(Categories);
