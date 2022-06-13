@@ -1,76 +1,49 @@
-const intialState = {
-  products: [
-    {
-      id: 1,
-      categoryId: 1,
-      name: "honda ",
-      price: "30000$",
-      description: "honda civic",
-      image:
-        "https://cdn.jdpower.com/JDPA_2020-Honda-Civic-Sport-Touring-Hatchback-White-Front-Quarter.jpg",
-    },
-
-    {
-      id: 2,
-      categoryId: 2,
-      name: "Mac",
-      price: "10$",
-      description: "big Mac",
-      image:
-        "https://www.eatthis.com/wp-content/uploads/sites/4//media/images/ext/111576974/mcdonalds-Big-Mac-1024-750.jpg?quality=82&strip=1&w=800",
-    },
-
-    {
-      id: 3,
-      categoryId: 3,
-      name: "iphone",
-      price: "1000$",
-      description: "iphone 12 pro max",
-      image:
-        "https://cdn.shopify.com/s/files/1/0409/7245/products/skyblue_5b29142a-95fe-4a5a-bfc6-9542394c2265_900x.png?v=1604915551",
-    },
-  ],
-  selectedProduct: {},
+import axios from "axios";
+const initialState = {
+  Products: [],
 };
-export default function state(state = intialState, action) {
+let api = "https://app-auth-obieda.herokuapp.com/api/v1/products";
+export default function productReduser(state = initialState, action) {
   switch (action.type) {
-    case "PRODUCT_SELECTED":
-      let selectedProduct = state.products.find(
-        (product) => product.id === action.payload
-      );
+    case "GET_PRODUCT":
       return {
-        ...state,
-        selectedProduct: selectedProduct,
+        Products: action.payload,
       };
-    case "Decrement_Product_Quantity":
-      let products = state.products;
-
-      let newproducts = products.map((product) => {
-        console.log(product.items);
-        if (product.id === action.payload && product.items > 0) {
-          return { ...product, items: product.items - 1 };
-        } else {
-          return product;
+    case "DECREMENT_INVENTORY":
+      let decArray = [...state.Products];
+      let decItem = action.payload;
+      let arr = decArray.map((ele) => {
+        if (ele.name == decItem.name) {
+          ele.inventoryCount = ele.inventoryCount - 1;
+          return ele;
         }
+        return ele;
       });
-      return {
-        ...state,
-        products: newproducts,
-      };
+      return { Products: arr };
 
     default:
       return state;
   }
 }
-export const getSelectedProduct = (value) => {
+export const decrementInventory = (item) => {
   return {
-    type: "PRODUCT_SELECTED",
-    payload: value,
+    type: "DECREMENT_INVENTORY",
+    payload: item,
   };
 };
-export const decrementProductQuantity = (value) => {
+
+export const getActionProduct = (payload) => {
+  console.log("payload ", payload);
   return {
-    type: "Decrement_Product_Quantity",
-    payload: value,
+    type: "GET_PRODUCT",
+    payload: payload,
+  };
+};
+
+export const getRemoteProduct = () => {
+  return async (dispatch) => {
+    const res = await axios.get(api);
+    console.log(res.data);
+    dispatch(getActionProduct(res.data));
   };
 };

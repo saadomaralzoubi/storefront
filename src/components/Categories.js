@@ -1,55 +1,54 @@
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { getSelectedCategory } from "../store/Categories";
+
+
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 
 
+//=====================================================
+import { connect, useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+
+import { getSelectedCategory, getRemoteData } from "../store/Categories";
 
 function Categories(props) {
-  const [value, setValue] = useState(0);
-  const getActiveCategory = props.getSelectedCategory;
+  const dispatchData = useDispatch(); 
 
+ 
+  const { getSelectedCategory } = props;
+  const [dispalyName, setdispalyName] = useState(1);
   useEffect(() => {
-    getActiveCategory(value + 1);
-  }, [value, getActiveCategory]);
+    console.log("dispalyName>>>>>>>>>   ", dispalyName);
+    getSelectedCategory(dispalyName);
+  }, [dispalyName, getSelectedCategory]);
+  useEffect(() => {
+    dispatchData(getRemoteData());
+  }, []);
+  const newCategory = useSelector((state) => state.catigory.category);
+  
   return (
-    <div>
-      <h3>Browse Our Categories</h3>
+    <>
       <ButtonGroup variant="text" aria-label="text button group">
-        <Button
-          onClick={() => {
-            setValue(0);
-          }}
-        >
-          cars
-        </Button>
-        <Button
-          onClick={() => {
-            setValue(1);
-          }}
-        >
-          food
-        </Button>
-        <Button
-          onClick={() => {
-            setValue(2);
-          }}
-        >
-          phones
-        </Button>
+        {newCategory.map((category) => {
+          console.log("Onclick : ", category.dispalyName);
+          return (
+            <Button
+              key={category.id}
+              onClick={() => {
+                setdispalyName(category);
+              }}
+            >
+              {category.dispalyName}
+            </Button>
+          );
+        })}
       </ButtonGroup>
-    </div>
+      <h2>{props.category.selectedCategory?.dispalyName}</h2>
+      <h6>{props.category.selectedCategory?.description}</h6>
+    </>
   );
 }
-const mapStateToProps = (state) => {
-  return {
-    creducers: state.creducers,
-  };
-};
-const mapDispatchToProps = {
-  getSelectedCategory,
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Categories);
+
+//enter the state that we take from store to add it to cheldrin
+const mapStateToPrps = (state) => ({ category: state.catigory });
+const mapDispatchToProps = { getSelectedCategory }; //take the action
+export default connect(mapStateToPrps, mapDispatchToProps)(Categories);

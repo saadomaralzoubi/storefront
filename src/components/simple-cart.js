@@ -18,7 +18,7 @@ function SimpleCart(props) {
             >
               <ListItem>
                 <ListItemText primary={item.name} />
-            
+
                 <IconButton
                   onClick={() => {
                     props.removeFromCart(item);
